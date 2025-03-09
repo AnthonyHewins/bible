@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package bible.v0;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/AnthonyHewins/bible/gen/go/bible/v0;bible";
+
+enum BookName {
+    BOOK_NAME_GENESIS = 0;
+    BOOK_NAME_EXODUS = 1;
+    BOOK_NAME_LEVITICUS = 2;
+    BOOK_NAME_NUMBERS = 3;
+    BOOK_NAME_DEUTERONOMY = 4;
+    BOOK_NAME_JOSHUA = 5;
+    BOOK_NAME_JUDGES = 6;
+    BOOK_NAME_RUTH = 7;
+    BOOK_NAME_1_SAMUEL = 8;
+    BOOK_NAME_2_SAMUEL = 9;
+    BOOK_NAME_1_KINGS = 10;
+    BOOK_NAME_2_KINGS = 11;
+    BOOK_NAME_1_CHRONICLES = 12;
+    BOOK_NAME_2_CHRONICLES = 13;
+    BOOK_NAME_EZRA = 14;
+    BOOK_NAME_NEHEMIAH = 15;
+    BOOK_NAME_ESTHER = 16;
+    BOOK_NAME_JOB = 17;
+    BOOK_NAME_PSALM = 18;
+    BOOK_NAME_PROVERBS = 19;
+    BOOK_NAME_ECCLESIASTES = 20;
+    BOOK_NAME_SONG_OF_SONGS = 21;
+    BOOK_NAME_ISAIAH = 22;
+    BOOK_NAME_JEREMIAH = 23;
+    BOOK_NAME_LAMENTATIONS = 24;
+    BOOK_NAME_EZEKIEL = 25;
+    BOOK_NAME_DANIEL = 26;
+    BOOK_NAME_HOSEA = 27;
+    BOOK_NAME_JOEL = 28;
+    BOOK_NAME_AMOS = 29;
+    BOOK_NAME_OBADIAH = 30;
+    BOOK_NAME_JONAH = 31;
+    BOOK_NAME_MICAH = 32;
+    BOOK_NAME_NAHUM = 33;
+    BOOK_NAME_HABAKKUK = 34;
+    BOOK_NAME_ZEPHANIAH = 35;
+    BOOK_NAME_HAGGAI = 36;
+    BOOK_NAME_ZECHARIAH = 37;
+    BOOK_NAME_MALACHI = 38;
+    BOOK_NAME_MATTHEW = 39;
+    BOOK_NAME_MARK = 40;
+    BOOK_NAME_LUKE = 41;
+    BOOK_NAME_JOHN = 42;
+    BOOK_NAME_ACTS = 43;
+    BOOK_NAME_ROMANS = 44;
+    BOOK_NAME_1_CORINTHIANS = 45;
+    BOOK_NAME_2_CORINTHIANS = 46;
+    BOOK_NAME_GALATIANS = 47;
+    BOOK_NAME_EPHESIANS = 48;
+    BOOK_NAME_PHILIPPIANS = 49;
+    BOOK_NAME_COLOSSIANS = 50;
+    BOOK_NAME_1_THESSALONIANS = 51;
+    BOOK_NAME_2_THESSALONIANS = 52;
+    BOOK_NAME_1_TIMOTHY = 53;
+    BOOK_NAME_2_TIMOTHY = 54;
+    BOOK_NAME_TITUS = 55;
+    BOOK_NAME_PHILEMON = 56;
+    BOOK_NAME_HEBREWS = 57;
+    BOOK_NAME_JAMES = 58;
+    BOOK_NAME_1_PETER = 59;
+    BOOK_NAME_2_PETER = 60;
+    BOOK_NAME_1_JOHN = 61;
+    BOOK_NAME_2_JOHN = 62;
+    BOOK_NAME_3_JOHN = 63;
+    BOOK_NAME_JUDE = 64;
+    BOOK_NAME_REVELATION = 65;
+}
+
+message Translation {
+    string id = 1;
+    string title = 2;
+    string lang = 3;
+    google.protobuf.Timestamp revision_date = 4;
+    string desc = 5;
+    string publisher = 6;
+    string src = 7;
+    repeated Book books = 8;
+}
+
+message Book {
+    BookName id = 1;
+    repeated Chapter chapters = 2;
+}
+
+message Chapter {
+    repeated string verses = 1;
+}

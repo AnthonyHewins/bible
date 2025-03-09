@@ -4,17 +4,35 @@
 # command aliases
 test := CONFIG_ENV=test go test ./...
 
-targets := bible
+targets := bible pipeline
 
 VERSION ?= v?.?.?
 COMMIT ?= $(shell git rev-list -1 HEAD)
-IMAGE := docker.io/ahewins/ton
-BUILD_FLAGS := 
-docker_bin ?= podman
 ifneq (,$(wildcard ./vendor))
 	$(info Found vendor directory; setting "-mod vendor" to any "go build" commands)
 	BUILD_FLAGS += -mod vendor
 endif
+
+#=================================
+# Assets
+#=================================
+filename := master.zip
+download: ## Download all open bible translations, unzip
+	wget https://github.com/gratis-bible/bible/archive/refs/heads/master.zip
+	unzip -tq $(filename)
+	unzip $(filename)
+	rm $(filename)
+	mv master translations
+
+LANG ?= en
+translate-lang: pipeline ## translate all files in $LANG (defaults to en)
+	mkdir -p protos/$(LANG)
+	for i in $(shell find translations/$(LANG) -type f -iname "*.xml"); do \
+	 	file=$$(basename $$i); \
+		out=protos/$(LANG)/$${file%.xml}.pbf.gz; \
+		cat $$i | ./bin/pipeline | gzip > $$out; \
+		echo "Completed $$i -> $$out"; \
+	done
 
 #======================================
 # Builds
@@ -32,6 +50,9 @@ run-%: ## Run the server using .env variables
 
 up-compose: ## Run a binary with docker compose
 	docker-compose -f ./docker/compose.yaml up
+
+proto: ## Generate proto files
+	buf generate
 
 #======================================
 # App hygiene
