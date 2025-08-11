@@ -1,6 +1,25 @@
 package main
 
+import (
+	"fmt"
+	"os"
+
+	"github.com/AnthonyHewins/bible/internal/codex"
+)
+
 func main() {
+	file := os.Args[1]
+	f, err := os.Open(file)
+	if err != nil {
+		panic(err)
+	}
+
+	r, err := codex.NewReader(f).ReadAll()
+	if err != nil {
+		fmt.Println(r[0])
+		panic(err)
+	}
+	fmt.Println(r[0].Text[0])
 	// app := tview.NewApplication()
 
 	// home := tview.NewBox().SetBorder(true).SetTitle("† Holy Bible †")

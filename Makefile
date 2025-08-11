@@ -25,11 +25,12 @@ download: ## Download all open bible translations, unzip
 	mv master translations
 
 LANG ?= en
+outdir=internal/codex
 translate-lang: pipeline ## translate all files in $LANG (defaults to en)
 	mkdir -p protos/$(LANG)
 	for i in $(shell find translations/$(LANG) -type f -iname "*.xml"); do \
 	 	file=$$(basename $$i); \
-		out=protos/$(LANG)/$${file%.xml}.pbf.gz; \
+		out=$(outdir)/$(LANG)/$${file%.xml}.pbf.gz; \
 		cat $$i | ./bin/pipeline | gzip > $$out; \
 		echo "Completed $$i -> $$out"; \
 	done
