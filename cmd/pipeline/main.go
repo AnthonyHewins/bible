@@ -25,11 +25,6 @@ func run() error {
 	w := codex.NewWriter(os.Stdout)
 
 	for _, v := range t.Books {
-		id, err := codex.BookNameString(v.ID)
-		if err != nil {
-			return fmt.Errorf("invalid bible book ID: '%s'. Should be chapter abbreviation like Gen, Acts, etc", v.ID)
-		}
-
 		chapters := make([][]string, len(v.Chapters))
 		for i, v := range v.Chapters {
 			verses := make([]string, len(v.Verses))
@@ -40,7 +35,7 @@ func run() error {
 			chapters[i] = verses
 		}
 
-		w.Write(codex.Book{ID: id, Text: chapters})
+		w.Write(codex.Book{ID: v.ID, Text: chapters})
 	}
 
 	return w.Close()

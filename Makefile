@@ -22,7 +22,7 @@ download: ## Download all open bible translations, unzip
 	unzip -tq $(filename)
 	unzip $(filename)
 	rm $(filename)
-	mv master translations
+	mv bible-master translations
 
 LANG ?= en
 outdir=internal/codex

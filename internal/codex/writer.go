@@ -23,7 +23,7 @@ func (w *Writer) Write(rows ...Book) error {
 		for j, v := range book.Text {
 			for _, verse := range v {
 				x = append(x, buffer{
-					BookID:  uint32(book.ID),
+					BookID:  book.ID,
 					Chapter: uint32(j + 1),
 					Verse:   verse,
 				})

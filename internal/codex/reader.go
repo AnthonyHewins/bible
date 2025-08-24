@@ -19,7 +19,7 @@ func NewReader(r io.ReaderAt) *Reader {
 func (r *Reader) ReadAll() ([]Book, error) {
 	books := []Book{}
 
-	b, book, chapter, verses := make([]buffer, 1000), Book{ID: BookNameGen}, 1, []string{}
+	b, book, chapter, verses := make([]buffer, 1000), Book{}, 1, []string{}
 	var eof bool
 	for _, err := r.r.Read(b); !eof; _, err = r.r.Read(b) {
 		switch {
@@ -31,27 +31,30 @@ func (r *Reader) ReadAll() ([]Book, error) {
 		}
 
 		for _, line := range b {
-			if line.BookID < uint32(book.ID) {
-				return books, fmt.Errorf("translation not sorted: looking for book %s and found %s", book.ID, BookName(line.BookID))
-			}
-
-			if line.Chapter < uint32(chapter) {
-				return books, fmt.Errorf("translation not sorted: looking for chapter %d in %s but got %d in %s", chapter, book.ID, line.Chapter, BookName(line.BookID))
-			}
-
-			if line.BookID > uint32(book.ID) {
+			if book.ID == "" {
+				book.ID = line.BookID
+			} else if book.ID != line.BookID {
 				books = append(books, book)
-				book, chapter = Book{ID: BookName(line.BookID)}, 1
+				book, chapter, verses = Book{ID: line.BookID}, 1, []string{line.Verse}
 				continue
 			}
 
-			if line.Chapter > uint32(chapter) {
+			switch {
+			case line.Chapter < uint32(chapter):
+				return books, fmt.Errorf(
+					"translation not sorted: looking for chapter %d (or %d in sequence) in %s but got %d in %s (corrupted data)",
+					chapter,
+					chapter+1,
+					book.ID,
+					line.Chapter,
+					line.BookID,
+				)
+			case line.Chapter > uint32(chapter):
 				book.Text = append(book.Text, verses)
-				chapter, verses = 1, []string{}
-				continue
+				chapter, verses = int(line.Chapter), []string{line.Verse}
+			default:
+				verses = append(verses, line.Verse)
 			}
-
-			verses = append(verses, line.Verse)
 		}
 	}
 

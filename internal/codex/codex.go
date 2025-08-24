@@ -16,12 +16,12 @@ type Translation struct {
 }
 
 type Book struct {
-	ID   BookName
+	ID   string
 	Text [][]string
 }
 
 type buffer struct {
-	BookID  uint32 `parquet:"id"`
+	BookID  string `parquet:"id"`
 	Chapter uint32 `parquet:"chapter"`
 	Verse   string `parquet:"verse"`
 }
